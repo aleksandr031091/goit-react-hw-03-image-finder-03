@@ -6,7 +6,7 @@ import css from "./ImageGallery.module.css";
 const ImageGallery = ({ images }) => {
   console.log(images);
   return (
-    <ul className="ImageGallery">
+    <ul className={css.ImageGallery}>
       {images.map((image) => (
         <ImageGalleryItem image={image.webformatURL} key={image.id} />
       ))}
