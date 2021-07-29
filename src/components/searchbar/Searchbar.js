@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
-import css from "./Searchbar.module.css";
+import css from "./SearchBar.module.css";
 
-class Searchbar extends Component {
+class SearchBar extends Component {
   state = {
     searchQuery: "",
   };
@@ -41,4 +41,4 @@ class Searchbar extends Component {
   }
 }
 
-export default Searchbar;
+export default SearchBar;

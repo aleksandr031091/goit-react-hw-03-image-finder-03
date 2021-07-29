@@ -1,20 +1,21 @@
 import React, { Component } from "react";
 import { getImages } from "../services/Api";
 
-import Searchbar from "../searchbar/Searchbar";
+import SearchBar from "../searchBar/SearchBar";
 import ImageGallery from "../imageGallery/ImageGallery";
 import Button from "../button/Button";
 import Modal from "../modal/Modal";
 
 import css from "./App.module.css";
+import LoaderSpinner from "../loader/Loader";
 
 class App extends Component {
   state = {
     images: [],
     page: 1,
     query: "",
-    isOpenModal: false,
     isLoading: false,
+    isOpenModal: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -27,20 +28,31 @@ class App extends Component {
 
     if (prevState.page !== page) {
       this.fatchImages(query, page);
+      return;
+    }
+
+    if (prevState.images !== images && prevState.images.length > 1) {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth",
+      });
     }
   }
 
   fatchImages = (query, page = 1) => {
-    getImages(query, page).then((data) =>
-      page === 1
-        ? this.setState({
-            images: data.hits,
-            page: 1,
-          })
-        : this.setState((prevState) => ({
-            images: [...prevState.images, ...data.hits],
-          }))
-    );
+    this.setState({ isLoading: true });
+    getImages(query, page)
+      .then((data) =>
+        page === 1
+          ? this.setState({
+              images: data.hits,
+              page: 1,
+            })
+          : this.setState((prevState) => ({
+              images: [...prevState.images, ...data.hits],
+            }))
+      )
+      .finally(() => this.setState({ isLoading: false }));
   };
 
   onSubmit = (searchQuery) => {
@@ -51,13 +63,39 @@ class App extends Component {
     this.setState((prev) => ({ page: prev.page + 1 }));
   };
 
+  openModal = (largeImage, alt) => {
+    this.setState({ isOpenModal: true, largeImage, alt });
+    window.addEventListener("keydown", this.closeModal);
+  };
+
+  closeModal = (e) => {
+    if (e.target === e.currentTarget) {
+      this.setState({ isOpenModal: false });
+      window.removeEventListener("keydown", this.closeModal);
+    }
+  };
+
   render() {
+    const { images, isLoading, largeImage, alt, isOpenModal } = this.state;
+
     return (
       <div className={css.App}>
-        <Searchbar onSubmit={this.onSubmit} />
-        <ImageGallery images={this.state.images} />
-        <Button onHandleClickLoadMore={this.onHandleClickLoadMore} />
-        <Modal />
+        <SearchBar onSubmit={this.onSubmit} />
+        <ImageGallery images={images} openModal={this.openModal} />
+
+        {isLoading && <LoaderSpinner />}
+
+        {images.length !== 0 && (
+          <Button onHandleClickLoadMore={this.onHandleClickLoadMore} />
+        )}
+
+        {isOpenModal && (
+          <Modal
+            largeImage={largeImage}
+            alt={alt}
+            closeModal={this.closeModal}
+          />
+        )}
       </div>
     );
   }
