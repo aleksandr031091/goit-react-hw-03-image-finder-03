@@ -69,7 +69,7 @@ class App extends Component {
   };
 
   closeModal = (e) => {
-    if (e.target === e.currentTarget) {
+    if (e.target === e.currentTarget || e.key === "Escape") {
       this.setState({ isOpenModal: false });
       window.removeEventListener("keydown", this.closeModal);
     }
