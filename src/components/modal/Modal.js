@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import css from "./Modal.module.css";
 
@@ -13,3 +14,9 @@ const Modal = ({ largeImage, alt, closeModal }) => {
 };
 
 export default Modal;
+
+Modal.propTypes = {
+  largeImage: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+  closeModal: PropTypes.func.isRequired,
+};

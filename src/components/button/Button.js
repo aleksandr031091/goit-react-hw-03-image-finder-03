@@ -1,4 +1,5 @@
 import css from "./Button.module.css";
+import PropTypes from "prop-types";
 
 const Button = ({ onHandleClickLoadMore }) => {
   return (
@@ -15,3 +16,7 @@ const Button = ({ onHandleClickLoadMore }) => {
 };
 
 export default Button;
+
+Button.propTypes = {
+  onHandleClickLoadMore: PropTypes.func.isRequired,
+};

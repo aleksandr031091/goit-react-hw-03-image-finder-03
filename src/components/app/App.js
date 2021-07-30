@@ -4,10 +4,10 @@ import { getImages } from "../services/Api";
 import SearchBar from "../searchBar/SearchBar";
 import ImageGallery from "../imageGallery/ImageGallery";
 import Button from "../button/Button";
+import LoaderSpinner from "../loader/Loader";
 import Modal from "../modal/Modal";
 
 import css from "./App.module.css";
-import LoaderSpinner from "../loader/Loader";
 
 class App extends Component {
   state = {
